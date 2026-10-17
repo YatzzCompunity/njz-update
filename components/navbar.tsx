@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import {
-  Home, Newspaper, Users, MessageCircle, User, Bell, Bookmark, Search, Moon, Sun, ShieldCheck,
+  Home, Newspaper, Users, MessageCircle, User, Bell, Bookmark, Search, Moon, Sun, ShieldCheck, Image as ImageIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, Button } from "./ui";
@@ -13,6 +13,7 @@ import { useAppTheme } from "./providers";
 const LINKS = [
   { href: "/", label: "Home", icon: Home },
   { href: "/updates", label: "Updates", icon: Newspaper },
+  { href: "/photos", label: "Photos", icon: ImageIcon },
   { href: "/community", label: "Community", icon: Users },
   { href: "/chat", label: "Chat", icon: MessageCircle },
 ];
@@ -103,6 +104,7 @@ export function Navbar() {
 const MOBILE_LINKS = [
   { href: "/", label: "Home", icon: Home },
   { href: "/updates", label: "Updates", icon: Newspaper },
+  { href: "/photos", label: "Photos", icon: ImageIcon },
   { href: "/community", label: "Community", icon: Users },
   { href: "/chat", label: "Chat", icon: MessageCircle },
   { href: "/profile", label: "Profile", icon: User },
@@ -115,7 +117,7 @@ export function MobileNav() {
       className="fixed inset-x-0 bottom-0 z-40 border-t border-zinc-200/70 bg-white/90 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-950/90 md:hidden"
       aria-label="Mobile"
     >
-      <div className="grid grid-cols-5">
+      <div className="grid grid-cols-6">
         {MOBILE_LINKS.map((l) => {
           const active = pathname === l.href || (l.href !== "/" && pathname.startsWith(l.href));
           return (

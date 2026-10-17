@@ -4,12 +4,14 @@ import * as React from "react";
 import {
   LayoutDashboard, Newspaper, Rss, Flag, Users as UsersIcon, Megaphone,
   Check, X, Pencil, Trash2, RefreshCw, Power, Eye, EyeOff, BadgeCheck, ShieldAlert,
+  Image as ImageIcon,
 } from "lucide-react";
 import { Card, Button, Input, Textarea, Badge, Skeleton, EmptyState, Modal, useToast } from "@/components/ui";
 import { VerificationBadge, SourceBadge } from "@/components/badges";
+import { PhotoManager } from "@/components/photo-manager";
 import { timeAgo, formatDate } from "@/lib/utils";
 
-type Tab = "overview" | "updates" | "sources" | "reports" | "users" | "announce";
+type Tab = "overview" | "updates" | "photos" | "sources" | "reports" | "users" | "announce";
 
 // ── Overview ──────────────────────────────────────────────────────────────
 
@@ -587,6 +589,7 @@ function Announce() {
 const TABS: Array<{ id: Tab; label: string; icon: typeof LayoutDashboard }> = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
   { id: "updates", label: "Updates", icon: Newspaper },
+  { id: "photos", label: "Photos", icon: ImageIcon },
   { id: "sources", label: "Sources", icon: Rss },
   { id: "reports", label: "Reports", icon: Flag },
   { id: "users", label: "Users", icon: UsersIcon },
@@ -617,6 +620,7 @@ export function AdminDashboard() {
       <div className="min-w-0 flex-1">
         {tab === "overview" && <Overview />}
         {tab === "updates" && <UpdateManager />}
+        {tab === "photos" && <PhotoManager />}
         {tab === "sources" && <SourceManager />}
         {tab === "reports" && <ModerationQueue />}
         {tab === "users" && <UserManager />}

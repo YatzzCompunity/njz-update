@@ -90,6 +90,18 @@ export const updateSchema = z.object({
   status: z.enum(["DRAFT", "PENDING_REVIEW", "PUBLISHED", "ARCHIVED"]).default("DRAFT"),
 });
 
+export const photoSchema = z.object({
+  title: z.string().min(1, "Title is required").max(200),
+  caption: z.string().max(2000).optional().or(z.literal("")),
+  imageUrl: z.string().min(1, "Image URL is required").max(2000),
+  memberId: z.string().cuid().optional().or(z.literal("")).nullable(),
+  credit: z.string().min(1, "Credit is required").max(200),
+  sourceUrl: z.string().url("Source URL must be a valid URL").max(2000).optional().or(z.literal("")),
+  publishedAt: z.string().datetime().optional().or(z.literal("")),
+  published: z.boolean().default(true),
+  order: z.number().int().min(0).max(10000).default(0),
+});
+
 export const sourceSchema = z.object({
   name: z.string().min(1).max(200),
   type: z.enum(["RSS", "YOUTUBE", "GOOGLE_NEWS", "MANUAL"]),

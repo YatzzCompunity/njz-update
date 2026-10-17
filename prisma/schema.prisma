@@ -176,6 +176,29 @@ model Member {
   updatedAt DateTime @updatedAt
 
   updates NewsUpdateMember[]
+  photos  Photo[]
+}
+
+// ── Photo gallery ───────────────────────────────────────────────────────
+
+model Photo {
+  id          String    @id @default(cuid())
+  title       String
+  caption     String?   @db.Text
+  imageUrl    String
+  memberId    String?
+  member      Member?   @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  credit      String
+  sourceUrl   String?
+  publishedAt DateTime?
+  published   Boolean   @default(true)
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([memberId])
+  @@index([createdAt])
+  @@index([published])
 }
 
 // ── News / updates ────────────────────────────────────────────────────────
