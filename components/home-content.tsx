@@ -32,16 +32,26 @@ export function HomeContent({
   return (
     <div className="space-y-12">
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden rounded-3xl border border-zinc-200/60 bg-gradient-to-br from-blush-500/15 via-lav-500/15 to-transparent p-8 sm:p-12 dark:border-zinc-800">
+      <section className="relative overflow-hidden rounded-[2rem] border border-zinc-200/60 bg-gradient-to-br from-blush-500/15 via-lav-500/15 to-transparent p-8 sm:p-12 dark:border-zinc-800">
         <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-blush-500/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-lav-500/20 blur-3xl" />
+        {/* Floating bunny + sparkles */}
+        <div className="pointer-events-none absolute right-6 top-6 hidden animate-float sm:block md:right-14" aria-hidden>
+          <img src="/images/bunny-logo.svg" alt="" className="sticker h-24 w-24 rounded-full md:h-28 md:w-28" />
+        </div>
+        <div className="pointer-events-none absolute bottom-8 right-24 hidden animate-float-soft md:block" aria-hidden>
+          <span className="text-3xl">✨</span>
+        </div>
+        <div className="pointer-events-none absolute right-40 top-10 hidden animate-wiggle lg:block" aria-hidden>
+          <span className="text-2xl">🌸</span>
+        </div>
         <div className="relative max-w-2xl space-y-5">
-          <p className="inline-flex items-center gap-2 rounded-full border border-blush-300/40 bg-white/60 px-3 py-1 text-xs font-medium text-blush-600 backdrop-blur dark:bg-zinc-900/60 dark:text-blush-300">
+          <p className="sticker-badge -rotate-2 text-blush-600 dark:text-blush-300">
             <Sparkles size={13} /> {t("hero.badge")}
           </p>
-          <h1 className="text-4xl font-black leading-tight tracking-tight sm:text-5xl">
+          <h1 className="font-display text-4xl font-black leading-tight tracking-tight sm:text-5xl">
             {t("hero.title1")}{" "}
-            <span className="bg-gradient-to-r from-blush-500 to-lav-500 bg-clip-text text-transparent">
+            <span className="squiggle bg-gradient-to-r from-blush-500 to-lav-500 bg-clip-text text-transparent">
               {t("hero.title2")}
             </span>
           </h1>
@@ -50,12 +60,12 @@ export function HomeContent({
           </p>
           <div className="flex flex-wrap gap-3">
             <Link href="/updates">
-              <Button size="lg">
+              <Button size="lg" className="rounded-full">
                 {t("hero.explore")} <ArrowRight size={17} />
               </Button>
             </Link>
             <Link href={sessionUser ? "/community" : "/register"}>
-              <Button size="lg" variant="outline">
+              <Button size="lg" variant="outline" className="rounded-full">
                 <Users size={17} /> {t("hero.join")}
               </Button>
             </Link>
@@ -68,7 +78,7 @@ export function HomeContent({
       {/* ── Latest Updates ── */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="flex items-center gap-2 text-xl font-bold">
+          <h2 className="font-display flex items-center gap-2 text-2xl font-extrabold">
             <Radio size={20} className="text-blush-500" /> {t("home.latest")}
           </h2>
           <Link href="/updates" className="flex items-center gap-1 text-sm font-medium text-blush-500 hover:underline">
@@ -89,7 +99,7 @@ export function HomeContent({
       {/* ── Trending + Live Activity ── */}
       <div className="grid gap-8 lg:grid-cols-3">
         <section className="space-y-4 lg:col-span-2">
-          <h2 className="flex items-center gap-2 text-xl font-bold">
+          <h2 className="font-display flex items-center gap-2 text-2xl font-extrabold">
             <TrendingUp size={20} className="text-lav-400" /> {t("home.trending")}
           </h2>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -107,7 +117,7 @@ export function HomeContent({
           )}
         </section>
         <section className="space-y-4">
-          <h2 className="text-xl font-bold">{t("home.liveActivity")}</h2>
+          <h2 className="font-display text-2xl font-extrabold">{t("home.liveActivity")}</h2>
           <LiveActivity />
         </section>
       </div>
@@ -115,7 +125,7 @@ export function HomeContent({
       {/* ── Member Spotlight ── */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold">{t("home.spotlight")}</h2>
+          <h2 className="font-display text-2xl font-extrabold">{t("home.spotlight")}</h2>
           <Link href="/members" className="flex items-center gap-1 text-sm font-medium text-blush-500 hover:underline">
             {t("home.allMembers")} <ArrowRight size={15} />
           </Link>
@@ -130,7 +140,7 @@ export function HomeContent({
       {/* ── Community Feed ── */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="flex items-center gap-2 text-xl font-bold">
+          <h2 className="font-display flex items-center gap-2 text-2xl font-extrabold">
             <Users size={20} className="text-blush-500" /> {t("home.communityFeed")}
           </h2>
           <Link href="/community" className="flex items-center gap-1 text-sm font-medium text-blush-500 hover:underline">

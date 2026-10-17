@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Baloo_2 } from "next/font/google";
 import { getServerSession } from "next-auth";
 import "./globals.css";
 import { authOptions } from "@/lib/auth";
@@ -8,6 +8,7 @@ import { Navbar, MobileNav } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
+const baloo = Baloo_2({ subsets: ["latin"], display: "swap", variable: "--font-display" });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -67,7 +68,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           }}
         />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} ${baloo.variable}`}>
         <Providers session={session}>
           <Navbar />
           <main className="mx-auto min-h-[70vh] w-full max-w-6xl px-4 pb-8 pt-6">

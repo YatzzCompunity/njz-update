@@ -21,10 +21,10 @@ export function Footer() {
       <div className="mx-auto max-w-6xl space-y-4 px-4 py-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blush-500 to-lav-500 text-xs font-black text-white">
-              NJZ
+            <span className="sticker flex h-9 w-9 items-center justify-center rounded-xl">
+              <img src="/images/bunny-logo.svg" alt="NJZ Update bunny logo" className="h-7 w-7" />
             </span>
-            <span className="font-extrabold tracking-tight">NJZ Update</span>
+            <span className="font-display font-extrabold tracking-tight">NJZ Update</span>
           </div>
           <nav className="flex flex-wrap gap-4 text-sm text-zinc-500" aria-label="Footer">
             <Link href="/updates" className="hover:text-blush-500">{t("nav.updates")}</Link>

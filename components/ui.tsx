@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 // ── Button ────────────────────────────────────────────────────────────────
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-400 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blush-400 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.97]",
   {
     variants: {
       variant: {
@@ -49,7 +49,7 @@ export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElemen
   return (
     <div
       className={cn(
-        "rounded-2xl border border-zinc-200/70 bg-white/80 shadow-sm backdrop-blur-sm transition-shadow hover:shadow-md",
+        "rounded-[1.4rem] border-2 border-zinc-200/70 bg-white/80 shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(225,90,138,0.18)]",
         "dark:border-zinc-800 dark:bg-zinc-900/70",
         className
       )}

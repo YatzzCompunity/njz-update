@@ -32,11 +32,11 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-zinc-200/70 bg-white/80 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-950/80">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blush-500 to-lav-500 text-sm font-black text-white">
-            NJZ
+        <Link href="/" className="group flex items-center gap-2">
+          <span className="sticker flex h-10 w-10 items-center justify-center rounded-2xl transition-transform group-hover:rotate-6">
+            <img src="/images/bunny-logo.svg" alt="NJZ Update bunny logo" className="h-8 w-8" />
           </span>
-          <span className="hidden text-lg font-extrabold tracking-tight sm:block">
+          <span className="font-display hidden text-xl font-extrabold tracking-tight sm:block">
             NJZ <span className="bg-gradient-to-r from-blush-500 to-lav-500 bg-clip-text text-transparent">Update</span>
           </span>
         </Link>

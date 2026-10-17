@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Original kawaii bunny logo for NJZ Update (not affiliated with NewJeans/ADOR) -->
+  <!-- Left ear -->
+  <ellipse cx="42" cy="30" rx="14" ry="26" fill="#FFF7F2" stroke="#3A2E2E" stroke-width="5"/>
+  <ellipse cx="42" cy="32" rx="6.5" ry="15" fill="#F9A8C9"/>
+  <!-- Right ear -->
+  <ellipse cx="78" cy="30" rx="14" ry="26" fill="#FFF7F2" stroke="#3A2E2E" stroke-width="5"/>
+  <ellipse cx="78" cy="32" rx="6.5" ry="15" fill="#F9A8C9"/>
+  <!-- Head -->
+  <circle cx="60" cy="76" r="34" fill="#FFF7F2" stroke="#3A2E2E" stroke-width="5"/>
+  <!-- Eyes (happy closed arcs) -->
+  <path d="M40 72 q7 -8 14 0" fill="none" stroke="#3A2E2E" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M66 72 q7 -8 14 0" fill="none" stroke="#3A2E2E" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- Blush -->
+  <ellipse cx="36" cy="84" rx="7" ry="4.5" fill="#F9A8C9" opacity="0.85"/>
+  <ellipse cx="84" cy="84" rx="7" ry="4.5" fill="#F9A8C9" opacity="0.85"/>
+  <!-- Mouth (small w) -->
+  <path d="M54 86 q3 4 6 0 q3 4 6 0" fill="none" stroke="#3A2E2E" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- Sparkle on head -->
+  <path d="M92 52 l2.2 5.4 5.4 2.2 -5.4 2.2 -2.2 5.4 -2.2 -5.4 -5.4 -2.2 5.4 -2.2 z" fill="#FFD94D" stroke="#3A2E2E" stroke-width="2.5" stroke-linejoin="round"/>
+</svg>

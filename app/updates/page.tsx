@@ -80,11 +80,14 @@ function UpdatesPage() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-3xl font-black tracking-tight">{t("updates.title")}</h1>
-        <p className="mt-1 text-sm text-zinc-500">
-          {t("updates.subtitle")}
-        </p>
+      <div className="flex items-center gap-3">
+        <img src="/images/bunny-logo.svg" alt="" aria-hidden className="sticker h-14 w-14 animate-wiggle rounded-full" />
+        <div>
+          <h1 className="font-display text-3xl font-black tracking-tight">{t("updates.title")}</h1>
+          <p className="mt-1 text-sm text-zinc-500">
+            {t("updates.subtitle")}
+          </p>
+        </div>
       </div>
 
       <form onSubmit={submitSearch} className="relative" role="search">
