@@ -9,19 +9,22 @@ import {
 import { cn } from "@/lib/utils";
 import { Avatar, Button } from "./ui";
 import { useAppTheme } from "./providers";
+import { useLang } from "@/lib/i18n";
+import { LangToggle } from "./lang-toggle";
 
 const LINKS = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/updates", label: "Updates", icon: Newspaper },
-  { href: "/photos", label: "Photos", icon: ImageIcon },
-  { href: "/community", label: "Community", icon: Users },
-  { href: "/chat", label: "Chat", icon: MessageCircle },
-];
+  { href: "/", key: "nav.home", icon: Home },
+  { href: "/updates", key: "nav.updates", icon: Newspaper },
+  { href: "/photos", key: "nav.photos", icon: ImageIcon },
+  { href: "/community", key: "nav.community", icon: Users },
+  { href: "/chat", key: "nav.chat", icon: MessageCircle },
+] as const;
 
 export function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const { theme, toggle } = useAppTheme();
+  const { t } = useLang();
   const user = session?.user as unknown as
     | { username?: string | null; role?: string; image?: string | null; name?: string | null }
     | undefined;
@@ -49,7 +52,7 @@ export function Navbar() {
               )}
             >
               <l.icon size={17} />
-              {l.label}
+              {t(l.key)}
             </Link>
           ))}
           {(user?.role === "ADMIN" || user?.role === "MODERATOR") && (
@@ -60,12 +63,13 @@ export function Navbar() {
                 pathname.startsWith("/admin") && "bg-blush-500/10 text-blush-600 dark:text-blush-300"
               )}
             >
-              <ShieldCheck size={17} /> Admin
+              <ShieldCheck size={17} /> {t("nav.admin")}
             </Link>
           )}
         </nav>
 
         <div className="flex items-center gap-1.5">
+          <LangToggle className="hidden sm:flex" />
           <Link href="/search" aria-label="Search">
             <Button variant="ghost" size="icon">
               <Search size={18} />
@@ -92,7 +96,7 @@ export function Navbar() {
             </>
           ) : (
             <Link href="/login">
-              <Button size="sm">Sign in</Button>
+              <Button size="sm">{t("nav.signin")}</Button>
             </Link>
           )}
         </div>
@@ -102,16 +106,17 @@ export function Navbar() {
 }
 
 const MOBILE_LINKS = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/updates", label: "Updates", icon: Newspaper },
-  { href: "/photos", label: "Photos", icon: ImageIcon },
-  { href: "/community", label: "Community", icon: Users },
-  { href: "/chat", label: "Chat", icon: MessageCircle },
-  { href: "/profile", label: "Profile", icon: User },
-];
+  { href: "/", key: "nav.home", icon: Home },
+  { href: "/updates", key: "nav.updates", icon: Newspaper },
+  { href: "/photos", key: "nav.photos", icon: ImageIcon },
+  { href: "/community", key: "nav.community", icon: Users },
+  { href: "/chat", key: "nav.chat", icon: MessageCircle },
+  { href: "/profile", key: "nav.profile", icon: User },
+] as const;
 
 export function MobileNav() {
   const pathname = usePathname();
+  const { t } = useLang();
   return (
     <nav
       className="fixed inset-x-0 bottom-0 z-40 border-t border-zinc-200/70 bg-white/90 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-950/90 md:hidden"
@@ -130,7 +135,7 @@ export function MobileNav() {
               )}
             >
               <l.icon size={20} />
-              {l.label}
+              {t(l.key)}
             </Link>
           );
         })}

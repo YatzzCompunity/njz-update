@@ -109,13 +109,21 @@ export async function runSource(sourceId: string): Promise<PipelineResult> {
           memberIdsFor(memberSlugs),
         ]);
 
+        // Fallback thumbnail: member photo (official newjeans.kr shots we host)
+        // or the group photo when no member is detected. Feed items rarely
+        // carry images, and publisher OG images can't be fetched reliably.
+        const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "").replace(/\/$/, "");
+        const fallbackImage = memberSlugs.length
+          ? `${siteUrl}/images/members/${memberSlugs[0]}.jpg`
+          : `${siteUrl}/images/members/group.jpg`;
+
         await prisma.newsUpdate.create({
           data: {
             slug,
             title: item.title.slice(0, 300),
             normalizedTitle: normalized,
             summary,
-            imageUrl: item.imageUrl,
+            imageUrl: item.imageUrl || (siteUrl ? fallbackImage : null),
             sourceId: source.id,
             sourceName: source.name,
             sourceUrl: canonicalUrl,

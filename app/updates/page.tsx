@@ -7,20 +7,22 @@ import { NewsCard, NewsCardSkeleton } from "@/components/news-card";
 import { FilterBar } from "@/components/search-filter";
 import { EmptyState, Button, Input } from "@/components/ui";
 import type { NewsCardData } from "@/components/news-card";
+import { useLang } from "@/lib/i18n";
 
 const MEMBER_FILTERS = ["all", "minji", "hanni", "danielle", "haerin", "hyein"] as const;
 const CATEGORY_FILTERS = [
-  { value: "all", label: "All" },
-  { value: "official", label: "Official" },
-  { value: "news", label: "News" },
-  { value: "music", label: "Music" },
-  { value: "appearance", label: "Appearance" },
-  { value: "social-media", label: "Social Media" },
-  { value: "schedule", label: "Schedule" },
-  { value: "member-updates", label: "Member Updates" },
-];
+  { value: "all", key: "updates.all" },
+  { value: "official", key: "updates.catOfficial" },
+  { value: "news", key: "updates.catNews" },
+  { value: "music", key: "updates.catMusic" },
+  { value: "appearance", key: "updates.catAppearance" },
+  { value: "social-media", key: "updates.catSocial" },
+  { value: "schedule", key: "updates.catSchedule" },
+  { value: "member-updates", key: "updates.catMember" },
+] as const;
 
 function UpdatesPage() {
+  const { t } = useLang();
   const searchParams = useSearchParams();
   const [member, setMember] = React.useState<string>(searchParams.get("member") ?? "all");
   const [category, setCategory] = React.useState("all");
@@ -79,9 +81,9 @@ function UpdatesPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-3xl font-black tracking-tight">Updates</h1>
+        <h1 className="text-3xl font-black tracking-tight">{t("updates.title")}</h1>
         <p className="mt-1 text-sm text-zinc-500">
-          Every NewJeans story, sourced and timestamped. Unverified items are always labeled.
+          {t("updates.subtitle")}
         </p>
       </div>
 
@@ -90,7 +92,7 @@ function UpdatesPage() {
         <Input
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Search updates… try “Minji”, “comeback”…"
+          placeholder={t("updates.searchPlaceholder")}
           aria-label="Search updates"
           className="h-11 rounded-2xl pl-10"
         />
@@ -101,17 +103,17 @@ function UpdatesPage() {
           ariaLabel="Filter by member"
           options={MEMBER_FILTERS.map((m) => ({
             value: m,
-            label: m === "all" ? "All" : m.charAt(0).toUpperCase() + m.slice(1),
+            label: m === "all" ? t("updates.all") : m.charAt(0).toUpperCase() + m.slice(1),
           }))}
           value={member}
           onChange={changeFilter(setMember)}
         />
-        <FilterBar ariaLabel="Filter by category" options={CATEGORY_FILTERS} value={category} onChange={changeFilter(setCategory)} />
+        <FilterBar ariaLabel="Filter by category" options={CATEGORY_FILTERS.map((c) => ({ value: c.value, label: t(c.key) }))} value={category} onChange={changeFilter(setCategory)} />
         <FilterBar
           ariaLabel="Sort"
           options={[
-            { value: "latest", label: "Latest" },
-            { value: "trending", label: "Trending" },
+            { value: "latest", label: t("updates.latest") },
+            { value: "trending", label: t("updates.trending") },
           ]}
           value={sort}
           onChange={changeFilter((v) => setSort(v as "latest" | "trending"))}
@@ -125,8 +127,8 @@ function UpdatesPage() {
       ) : updates.length === 0 ? (
         <EmptyState
           icon={<Newspaper size={48} />}
-          title="No updates found"
-          description="Try a different search or filter — new stories are fetched every 15 minutes."
+          title={t("updates.noUpdates")}
+          description={t("updates.noUpdatesDesc")}
         />
       ) : (
         <>
@@ -147,7 +149,7 @@ function UpdatesPage() {
                   load(next, true);
                 }}
               >
-                {loadingMore ? "Loading…" : "Load more"}
+                {loadingMore ? t("updates.loading") : t("updates.loadMore")}
               </Button>
             </div>
           )}

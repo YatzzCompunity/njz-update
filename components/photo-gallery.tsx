@@ -4,6 +4,7 @@ import * as React from "react";
 import Image from "next/image";
 import { X, ExternalLink, Camera } from "lucide-react";
 import { Skeleton, EmptyState, Badge } from "@/components/ui";
+import { useLang } from "@/lib/i18n";
 
 type Member = { id: string; slug: string; name: string };
 type Photo = {
@@ -20,6 +21,7 @@ type Photo = {
 const FILTERS = ["all", "minji", "hanni", "danielle", "haerin", "hyein"];
 
 export function PhotoGallery() {
+  const { t } = useLang();
   const [filter, setFilter] = React.useState("all");
   const [photos, setPhotos] = React.useState<Photo[] | null>(null);
   const [members, setMembers] = React.useState<Member[]>([]);
@@ -71,7 +73,7 @@ export function PhotoGallery() {
                 : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
             }`}
           >
-            {f === "all" ? "All" : memberName(f)}
+            {f === "all" ? t("photos.all") : memberName(f)}
           </button>
         ))}
       </div>
@@ -86,8 +88,8 @@ export function PhotoGallery() {
       ) : photos.length === 0 ? (
         <EmptyState
           icon={<Camera size={32} />}
-          title="No photos yet"
-          description="Photos for this member haven't been added yet. Check back soon."
+          title={t("photos.noPhotos")}
+          description={t("photos.noPhotosDesc")}
         />
       ) : (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
