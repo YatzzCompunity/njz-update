@@ -1,0 +1,434 @@
+// ── NJZ Update · Prisma schema ─────────────────────────────────────────────
+// PostgreSQL + Prisma ORM. Every list query in the app is paginated and all
+// hot columns are indexed (createdAt / publishedAt / member / category / user / source).
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ── Enums ─────────────────────────────────────────────────────────────────
+
+enum Role {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+enum VerificationStatus {
+  VERIFIED
+  UNVERIFIED
+  PENDING
+}
+
+enum PublishStatus {
+  DRAFT
+  PENDING_REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum SourceLabel {
+  OFFICIAL
+  NEWS
+  COMMUNITY
+  UNVERIFIED
+}
+
+enum SourceType {
+  RSS
+  YOUTUBE
+  GOOGLE_NEWS
+  MANUAL
+}
+
+enum TargetType {
+  POST
+  COMMENT
+  CHAT_MESSAGE
+  UPDATE
+  USER
+}
+
+enum FollowTarget {
+  MEMBER
+  CATEGORY
+  TOPIC
+}
+
+enum ReportStatus {
+  OPEN
+  REVIEWED
+  RESOLVED
+  DISMISSED
+}
+
+enum NotificationType {
+  REPLY
+  LIKE
+  MENTION
+  NEW_UPDATE
+  ADMIN_ANNOUNCEMENT
+  REPORT_UPDATE
+}
+
+// ── Auth (NextAuth / Auth.js) ─────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String?
+  username      String?   @unique
+  role          Role      @default(USER)
+  suspended     Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  profile       Profile?
+  posts         Post[]
+  comments      Comment[]
+  reactions     Reaction[]
+  bookmarks     Bookmark[]
+  chatMessages  ChatMessage[]
+  reports       Report[]
+  notifications Notification[]
+  follows       Follow[]
+  adminActions  AdminAction[]
+  createdUpdates NewsUpdate[] @relation("CreatedUpdates")
+
+  @@index([createdAt])
+  @@index([role])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Profile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  displayName String?
+  avatarUrl   String?
+  bio         String?  @db.Text
+  location    String?
+  website     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ── Members ───────────────────────────────────────────────────────────────
+
+model Member {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  nickname  String?
+  bio       String?  @db.Text
+  imageUrl  String?
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  updates NewsUpdateMember[]
+}
+
+// ── News / updates ────────────────────────────────────────────────────────
+
+model Category {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  updates NewsUpdate[]
+}
+
+model NewsSource {
+  id              String      @id @default(cuid())
+  name            String
+  type            SourceType  @default(RSS)
+  url             String
+  label           SourceLabel @default(NEWS)
+  enabled         Boolean     @default(true)
+  fetchIntervalMin Int        @default(15)
+  lastFetchedAt   DateTime?
+  lastStatus      String?
+  lastError       String?     @db.Text
+  fetchCount      Int         @default(0)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  updates NewsUpdate[]
+  logs    RefreshLog[]
+
+  @@index([enabled])
+}
+
+model NewsUpdate {
+  id                 String             @id @default(cuid())
+  slug               String             @unique
+  title              String
+  normalizedTitle    String
+  summary            String             @db.Text
+  imageUrl           String?
+  sourceId           String?
+  sourceName         String
+  sourceUrl          String             @unique
+  publishedAt        DateTime?
+  fetchedAt          DateTime           @default(now())
+  categoryId         String?
+  verificationStatus VerificationStatus @default(UNVERIFIED)
+  status             PublishStatus      @default(PENDING_REVIEW)
+  viewCount          Int                @default(0)
+  canonicalGroup     String?
+  duplicateOfId      String?
+  createdById        String?
+
+  source     NewsSource?        @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+  category   Category?          @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  duplicateOf NewsUpdate?       @relation("Duplicates", fields: [duplicateOfId], references: [id], onDelete: SetNull)
+  duplicates  NewsUpdate[]       @relation("Duplicates")
+  createdBy   User?              @relation("CreatedUpdates", fields: [createdById], references: [id], onDelete: SetNull)
+  members     NewsUpdateMember[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([publishedAt])
+  @@index([createdAt])
+  @@index([status])
+  @@index([categoryId])
+  @@index([sourceId])
+  @@index([canonicalGroup])
+  @@index([verificationStatus])
+}
+
+model NewsUpdateMember {
+  updateId String
+  memberId String
+
+  update NewsUpdate @relation(fields: [updateId], references: [id], onDelete: Cascade)
+  member Member     @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@id([updateId, memberId])
+  @@index([memberId])
+}
+
+// ── Community ─────────────────────────────────────────────────────────────
+
+model Post {
+  id        String   @id @default(cuid())
+  authorId  String
+  content   String   @db.Text
+  imageUrl  String?
+  linkUrl   String?
+  hidden    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments  Comment[]
+
+  @@index([createdAt])
+  @@index([authorId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  postId    String
+  authorId  String
+  parentId  String?
+  content   String   @db.Text
+  hidden    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  post     Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parent   Comment?  @relation("Replies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  Comment[] @relation("Replies")
+
+  @@index([postId])
+  @@index([authorId])
+  @@index([createdAt])
+}
+
+model Reaction {
+  id         String     @id @default(cuid())
+  userId     String
+  targetType TargetType
+  targetId   String
+  kind       String     @default("like")
+  createdAt  DateTime   @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, targetType, targetId, kind])
+  @@index([targetType, targetId])
+}
+
+model Bookmark {
+  id         String     @id @default(cuid())
+  userId     String
+  targetType TargetType
+  targetId   String
+  createdAt  DateTime   @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, targetType, targetId])
+  @@index([userId, createdAt])
+}
+
+// ── Chat ──────────────────────────────────────────────────────────────────
+
+model ChatRoom {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+
+  messages ChatMessage[]
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  roomId    String
+  authorId  String
+  content   String   @db.Text
+  hidden    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  room   ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  author User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([roomId, createdAt])
+  @@index([authorId])
+}
+
+// ── Moderation / notifications / follows ──────────────────────────────────
+
+model Report {
+  id         String       @id @default(cuid())
+  reporterId String
+  targetType TargetType
+  targetId   String
+  reason     String
+  details    String?      @db.Text
+  status     ReportStatus @default(OPEN)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  reporter User @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  body      String?          @db.Text
+  link      String?
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read, createdAt])
+}
+
+model Follow {
+  id         String       @id @default(cuid())
+  userId     String
+  targetType FollowTarget
+  targetId   String
+  createdAt  DateTime     @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, targetType, targetId])
+  @@index([targetType, targetId])
+}
+
+// ── Ops ───────────────────────────────────────────────────────────────────
+
+model RefreshLog {
+  id           String    @id @default(cuid())
+  sourceId     String?
+  startedAt    DateTime  @default(now())
+  finishedAt   DateTime?
+  status       String    @default("running")
+  itemsFetched Int       @default(0)
+  itemsInserted Int      @default(0)
+  error        String?   @db.Text
+
+  source NewsSource? @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+
+  @@index([startedAt])
+}
+
+model AdminAction {
+  id         String   @id @default(cuid())
+  adminId    String
+  action     String
+  targetType String?
+  targetId   String?
+  details    String?  @db.Text
+  createdAt  DateTime @default(now())
+
+  admin User @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+}
