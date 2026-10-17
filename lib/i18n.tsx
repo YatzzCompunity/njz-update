@@ -90,6 +90,14 @@ const STRINGS = {
     en: "News summaries are short excerpts with attribution to the original publisher — always follow the source link to read the full story. Unverified items are labeled UNVERIFIED and should not be treated as fact.",
   },
   "footer.madeWith": { id: "Dibuat dengan ♥ oleh Bunnies, untuk Bunnies.", en: "Made with ♥ by Bunnies, for Bunnies." },
+  // ── Music ──
+  "music.title": { id: "Dengerin NewJeans", en: "Listen to NewJeans" },
+  "music.subtitle": {
+    id: "MV resmi dan diskografi lengkap — langsung dari sumber resminya.",
+    en: "Official MVs and the full discography — straight from the official sources.",
+  },
+  "music.mvLabel": { id: "MV Resmi: New Jeans", en: "Official MV: New Jeans" },
+  "music.spotifyLabel": { id: "Diskografi di Spotify", en: "Discography on Spotify" },
   // ── Common ──
   "common.loading": { id: "Memuat...", en: "Loading..." },
 } as const;

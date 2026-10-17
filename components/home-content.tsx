@@ -8,6 +8,7 @@ import { MemberCard } from "@/components/member-card";
 import { CommunityPost } from "@/components/community-post";
 import { LiveActivity } from "@/components/live-activity";
 import { DisclaimerBanner } from "@/components/footer";
+import { MusicSection } from "@/components/music-section";
 import { useLang } from "@/lib/i18n";
 
 type Update = React.ComponentProps<typeof NewsCard>["update"];
@@ -74,6 +75,9 @@ export function HomeContent({
       </section>
 
       <DisclaimerBanner />
+
+      {/* ── Music ── */}
+      <MusicSection />
 
       {/* ── Latest Updates ── */}
       <section className="space-y-4">
